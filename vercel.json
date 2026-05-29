@@ -4,10 +4,5 @@
       "path": "/api/cron/recurring",
       "schedule": "0 6 * * *"
     }
-  ],
-  "functions": {
-    "api/**": {
-      "runtime": "nodejs20"
-    }
-  }
+  ]
 }
