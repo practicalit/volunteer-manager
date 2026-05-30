@@ -1,17 +1,12 @@
-// Prisma 6 with new prisma-client generator — typed as any to allow model access
-// The actual runtime client is in lib/generated/prisma
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { PrismaClient as GeneratedPrismaClient } from "@/lib/generated/prisma/client";
-
-type PrismaClientType = any;
+import { PrismaClient } from "@prisma/client";
 
 const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClientType | undefined;
+  prisma: PrismaClient | undefined;
 };
 
-const prisma: PrismaClientType =
+const prisma: PrismaClient =
   globalForPrisma.prisma ??
-  new GeneratedPrismaClient({
+  new PrismaClient({
     log:
       process.env.NODE_ENV === "development"
         ? ["query", "error", "warn"]
