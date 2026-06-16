@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,40 +9,95 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { X, Plus, Trash2 } from "lucide-react";
+import { Edit2, X, Plus, Trash2 } from "lucide-react";
 
 const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] as const;
 
-type Category = { id: string; name: string; color: string };
+interface Category {
+  id: string;
+  name: string;
+  color: string;
+}
 
-export default function NewVolunteerPage() {
+interface VolunteerEditFormProps {
+  volunteer: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    phone: string;
+    email: string | null;
+    skills: string[];
+    notes: string | null;
+    availability: unknown;
+    categories: { categoryId: string }[];
+  };
+  categories: Category[];
+}
+
+function parseAvailability(raw: unknown): AvailabilitySlot[] {
+  if (!Array.isArray(raw)) return [];
+  return raw.filter(
+    (s): s is AvailabilitySlot =>
+      s &&
+      typeof s === "object" &&
+      typeof s.day === "string" &&
+      typeof s.startTime === "string" &&
+      typeof s.endTime === "string"
+  );
+}
+
+export function VolunteerEditForm({ volunteer, categories }: VolunteerEditFormProps) {
   const router = useRouter();
+  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [skills, setSkills] = useState<string[]>([]);
+
+  const [skills, setSkills] = useState<string[]>(volunteer.skills);
   const [skillInput, setSkillInput] = useState("");
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
-  const [availability, setAvailability] = useState<AvailabilitySlot[]>([]);
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>(
+    volunteer.categories.map((c) => c.categoryId)
+  );
+  const [availability, setAvailability] = useState<AvailabilitySlot[]>(
+    parseAvailability(volunteer.availability)
+  );
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm<VolunteerInput>({ resolver: zodResolver(volunteerSchema) });
+  } = useForm<VolunteerInput>({
+    resolver: zodResolver(volunteerSchema),
+    defaultValues: {
+      firstName: volunteer.firstName,
+      lastName: volunteer.lastName,
+      phone: volunteer.phone,
+      email: volunteer.email ?? "",
+      notes: volunteer.notes ?? "",
+    },
+  });
 
-  useEffect(() => {
-    fetch("/api/categories")
-      .then((r) => r.json())
-      .then((data) => setCategories(Array.isArray(data) ? data : []))
-      .catch(() => {});
-  }, []);
+  function openDialog() {
+    // Reset local state to current volunteer values each time the dialog opens
+    setSkills(volunteer.skills);
+    setSkillInput("");
+    setSelectedCategoryIds(volunteer.categories.map((c) => c.categoryId));
+    setAvailability(parseAvailability(volunteer.availability));
+    reset({
+      firstName: volunteer.firstName,
+      lastName: volunteer.lastName,
+      phone: volunteer.phone,
+      email: volunteer.email ?? "",
+      notes: volunteer.notes ?? "",
+    });
+    setOpen(true);
+  }
 
   function addSkill() {
     const s = skillInput.trim();
     if (s && !skills.includes(s)) {
-      setSkills([...skills, s]);
+      setSkills((prev) => [...prev, s]);
       setSkillInput("");
     }
   }
@@ -53,7 +108,7 @@ export default function NewVolunteerPage() {
     );
   }
 
-  function addAvailabilitySlot() {
+  function addSlot() {
     setAvailability((prev) => [...prev, { day: "Monday", startTime: "09:00", endTime: "17:00" }]);
   }
 
@@ -69,8 +124,8 @@ export default function NewVolunteerPage() {
 
   async function onSubmit(data: VolunteerInput) {
     setLoading(true);
-    const res = await fetch("/api/volunteers", {
-      method: "POST",
+    const res = await fetch(`/api/volunteers/${volunteer.id}`, {
+      method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ...data,
@@ -83,48 +138,51 @@ export default function NewVolunteerPage() {
     setLoading(false);
 
     if (!res.ok) {
-      toast.error(json.error || "Failed to create volunteer");
+      toast.error(json.error || "Failed to update volunteer");
     } else {
-      toast.success("Volunteer added successfully");
-      router.push(`/volunteers/${json.id}`);
+      toast.success("Volunteer updated");
+      setOpen(false);
+      router.refresh();
     }
   }
 
   return (
-    <div className="max-w-2xl space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Add Volunteer</h1>
-        <p className="text-sm text-gray-500">Add a volunteer to your organization&apos;s shared directory.</p>
-      </div>
+    <>
+      <Button variant="outline" size="sm" onClick={openDialog}>
+        <Edit2 className="h-4 w-4" />
+        Edit
+      </Button>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Volunteer Information</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Volunteer</DialogTitle>
+          </DialogHeader>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-2">
+            {/* Name */}
+            <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label htmlFor="firstName">First name *</Label>
-                <Input id="firstName" placeholder="Jane" {...register("firstName")} />
+                <Label htmlFor="edit-firstName">First name *</Label>
+                <Input id="edit-firstName" {...register("firstName")} />
                 {errors.firstName && <p className="text-xs text-red-600">{errors.firstName.message}</p>}
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="lastName">Last name *</Label>
-                <Input id="lastName" placeholder="Smith" {...register("lastName")} />
+                <Label htmlFor="edit-lastName">Last name *</Label>
+                <Input id="edit-lastName" {...register("lastName")} />
                 {errors.lastName && <p className="text-xs text-red-600">{errors.lastName.message}</p>}
               </div>
             </div>
 
+            {/* Contact */}
             <div className="space-y-1.5">
-              <Label htmlFor="phone">Phone number * <span className="text-xs text-gray-400">(used for SMS)</span></Label>
-              <Input id="phone" placeholder="(555) 123-4567" {...register("phone")} />
+              <Label htmlFor="edit-phone">Phone number *</Label>
+              <Input id="edit-phone" placeholder="(555) 123-4567" {...register("phone")} />
               {errors.phone && <p className="text-xs text-red-600">{errors.phone.message}</p>}
             </div>
-
             <div className="space-y-1.5">
-              <Label htmlFor="email">Email <span className="text-xs text-gray-400">(optional)</span></Label>
-              <Input id="email" type="email" placeholder="jane@example.com" {...register("email")} />
+              <Label htmlFor="edit-email">Email <span className="text-xs text-gray-400">(optional)</span></Label>
+              <Input id="edit-email" type="email" placeholder="jane@example.com" {...register("email")} />
               {errors.email && <p className="text-xs text-red-600">{errors.email.message}</p>}
             </div>
 
@@ -132,7 +190,6 @@ export default function NewVolunteerPage() {
             {categories.length > 0 && (
               <div className="space-y-2">
                 <Label>Skill Categories <span className="text-xs text-gray-400">(optional)</span></Label>
-                <p className="text-xs text-gray-500">Select the areas this volunteer can help with.</p>
                 <div className="flex flex-wrap gap-2">
                   {categories.map((cat) => {
                     const checked = selectedCategoryIds.includes(cat.id);
@@ -201,14 +258,13 @@ export default function NewVolunteerPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <Label>Availability <span className="text-xs text-gray-400">(optional)</span></Label>
-                  <p className="text-xs text-gray-500 mt-0.5">Days and times this volunteer is typically available.</p>
                 </div>
-                <Button type="button" variant="outline" size="sm" onClick={addAvailabilitySlot}>
+                <Button type="button" variant="outline" size="sm" onClick={addSlot}>
                   <Plus className="h-3.5 w-3.5 mr-1" />
                   Add slot
                 </Button>
               </div>
-              {availability.length > 0 && (
+              {availability.length > 0 ? (
                 <div className="space-y-2">
                   {availability.map((slot, i) => (
                     <div key={i} className="flex items-center gap-2 rounded-lg border border-gray-100 bg-gray-50 p-2">
@@ -244,28 +300,26 @@ export default function NewVolunteerPage() {
                     </div>
                   ))}
                 </div>
-              )}
-              {availability.length === 0 && (
+              ) : (
                 <p className="text-xs text-gray-400 italic">No availability slots added yet.</p>
               )}
             </div>
 
+            {/* Notes */}
             <div className="space-y-1.5">
-              <Label htmlFor="notes">Notes <span className="text-xs text-gray-400">(optional)</span></Label>
-              <Textarea id="notes" placeholder="Any relevant notes about this volunteer..." {...register("notes")} />
+              <Label htmlFor="edit-notes">Notes <span className="text-xs text-gray-400">(optional)</span></Label>
+              <Textarea id="edit-notes" placeholder="Any relevant notes..." {...register("notes")} />
             </div>
 
-            <div className="flex gap-3 pt-2">
+            <DialogFooter className="pt-2">
+              <Button type="button" variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
               <Button type="submit" disabled={loading}>
-                {loading ? "Adding..." : "Add Volunteer"}
+                {loading ? "Saving..." : "Save Changes"}
               </Button>
-              <Button type="button" variant="outline" onClick={() => router.back()}>
-                Cancel
-              </Button>
-            </div>
+            </DialogFooter>
           </form>
-        </CardContent>
-      </Card>
-    </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

@@ -5,12 +5,13 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { UserPlus, UserMinus } from "lucide-react";
+import { UserPlus, UserMinus, Star } from "lucide-react";
 
 interface Volunteer {
   id: string;
   firstName: string;
   lastName: string;
+  categories?: { categoryId: string }[];
 }
 
 interface TeamMembersManagerProps {
@@ -19,6 +20,7 @@ interface TeamMembersManagerProps {
   availableVolunteers?: Volunteer[];
   memberIds?: string[];
   volunteerId?: string;
+  teamCategoryId?: string;
 }
 
 export function TeamMembersManager({
@@ -27,6 +29,7 @@ export function TeamMembersManager({
   availableVolunteers = [],
   memberIds = [],
   volunteerId,
+  teamCategoryId,
 }: TeamMembersManagerProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -37,12 +40,25 @@ export function TeamMembersManager({
     (v) => !memberIds.includes(v.id)
   );
 
-  const filtered = search
-    ? notYetMembers.filter(
-        (v) =>
-          `${v.firstName} ${v.lastName}`.toLowerCase().includes(search.toLowerCase())
-      )
-    : notYetMembers;
+  function isMatch(v: Volunteer) {
+    return !!teamCategoryId && v.categories?.some((c) => c.categoryId === teamCategoryId);
+  }
+
+  const filtered = (
+    search
+      ? notYetMembers.filter(
+          (v) =>
+            `${v.firstName} ${v.lastName}`.toLowerCase().includes(search.toLowerCase())
+        )
+      : notYetMembers
+  ).sort((a, b) => {
+    // Matching volunteers bubble to the top
+    const aMatch = isMatch(a) ? 0 : 1;
+    const bMatch = isMatch(b) ? 0 : 1;
+    return aMatch - bMatch;
+  });
+
+  const matchCount = filtered.filter(isMatch).length;
 
   async function addVolunteer(vid: string) {
     setLoading(true);
@@ -109,23 +125,39 @@ export function TeamMembersManager({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
+            {teamCategoryId && matchCount > 0 && (
+              <p className="flex items-center gap-1 text-xs text-amber-600">
+                <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                {matchCount} volunteer{matchCount !== 1 ? "s" : ""} match this team&apos;s category
+              </p>
+            )}
             <div className="max-h-64 overflow-y-auto space-y-1">
               {filtered.length === 0 ? (
                 <p className="text-sm text-gray-400 py-4 text-center">
                   {notYetMembers.length === 0 ? "All volunteers are already members." : "No volunteers found."}
                 </p>
               ) : (
-                filtered.map((v) => (
-                  <button
-                    key={v.id}
-                    className="flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm hover:bg-gray-50"
-                    onClick={() => addVolunteer(v.id)}
-                    disabled={loading}
-                  >
-                    <span className="font-medium text-gray-900">{v.firstName} {v.lastName}</span>
-                    <span className="text-xs text-indigo-600">+ Add</span>
-                  </button>
-                ))
+                filtered.map((v) => {
+                  const match = isMatch(v);
+                  return (
+                    <button
+                      key={v.id}
+                      className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition-colors ${
+                        match
+                          ? "bg-amber-50 hover:bg-amber-100 border border-amber-200"
+                          : "hover:bg-gray-50"
+                      }`}
+                      onClick={() => addVolunteer(v.id)}
+                      disabled={loading}
+                    >
+                      <span className="flex items-center gap-1.5 font-medium text-gray-900">
+                        {match && <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400 shrink-0" />}
+                        {v.firstName} {v.lastName}
+                      </span>
+                      <span className="text-xs text-indigo-600">+ Add</span>
+                    </button>
+                  );
+                })
               )}
             </div>
           </div>

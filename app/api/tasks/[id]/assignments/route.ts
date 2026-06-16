@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { sendSms, buildAssignmentMessage } from "@/lib/sms";
 import { formatDateTime } from "@/lib/utils";
 
+const CONFLICT_WINDOW_MS = 2 * 60 * 60 * 1000; // ±2 hours
+
 // POST /api/tasks/[id]/assignments — assign volunteers to task and optionally send SMS
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -17,8 +19,9 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   if (!task) return NextResponse.json({ error: "Task not found" }, { status: 404 });
 
   const body = await req.json();
-  const { volunteerIds, sendNotification = true } = body as {
+  const { volunteerIds, forceVolunteerIds = [], sendNotification = true } = body as {
     volunteerIds: string[];
+    forceVolunteerIds?: string[];
     sendNotification?: boolean;
   };
 
@@ -26,9 +29,55 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     return NextResponse.json({ error: "volunteerIds required" }, { status: 400 });
   }
 
+  const forceSet = new Set<string>(forceVolunteerIds);
+
+  // Two-step conflict detection:
+  // 1. Find all other tasks in the same org within the conflict window.
+  // 2. Check if any of the requested volunteers are PENDING/CONFIRMED on those tasks.
+  const windowStart = new Date(task.scheduledAt.getTime() - CONFLICT_WINDOW_MS);
+  const windowEnd   = new Date(task.scheduledAt.getTime() + CONFLICT_WINDOW_MS);
+
+  const overlappingTasks = await prisma.task.findMany({
+    where: {
+      organizationId: session.user.organizationId,
+      id: { not: taskId },
+      scheduledAt: { gte: windowStart, lte: windowEnd },
+    },
+    select: { id: true, name: true },
+  });
+
+  const conflictMap = new Map<string, string>(); // volunteerId → conflicting task name
+
+  if (overlappingTasks.length > 0) {
+    const overlappingTaskIds = overlappingTasks.map((t) => t.id);
+    const taskNameById = new Map(overlappingTasks.map((t) => [t.id, t.name]));
+
+    const conflictingAssignments = await prisma.assignment.findMany({
+      where: {
+        volunteerId: { in: volunteerIds },
+        taskId: { in: overlappingTaskIds },
+        status: { in: ["PENDING", "CONFIRMED"] },
+      },
+      select: { volunteerId: true, taskId: true },
+    });
+
+    for (const ca of conflictingAssignments) {
+      if (!conflictMap.has(ca.volunteerId)) {
+        conflictMap.set(ca.volunteerId, taskNameById.get(ca.taskId) ?? "another task");
+      }
+    }
+  }
+
   const results = [];
+  const conflicts: { volunteerId: string; taskName: string }[] = [];
 
   for (const volunteerId of volunteerIds) {
+    // Skip volunteers with a scheduling conflict unless the lead explicitly forced it
+    if (conflictMap.has(volunteerId) && !forceSet.has(volunteerId)) {
+      conflicts.push({ volunteerId, taskName: conflictMap.get(volunteerId)! });
+      continue;
+    }
+
     const volunteer = await prisma.volunteer.findFirst({
       where: { id: volunteerId, organizationId: session.user.organizationId },
     });
@@ -67,5 +116,5 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     results.push({ volunteerId, assignmentId: assignment.id, smsResult });
   }
 
-  return NextResponse.json({ results });
+  return NextResponse.json({ results, conflicts });
 }

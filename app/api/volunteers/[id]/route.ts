@@ -53,8 +53,15 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
         ...(data.email !== undefined && { email: data.email || null }),
         ...(data.skills !== undefined && { skills: data.skills }),
         ...(data.notes !== undefined && { notes: data.notes || null }),
+        ...(data.availability !== undefined && { availability: data.availability }),
         ...(body.isActive !== undefined && { isActive: body.isActive }),
         ...(body.optedOut !== undefined && { optedOut: body.optedOut }),
+        ...(data.categoryIds !== undefined && {
+          categories: {
+            deleteMany: {},
+            create: data.categoryIds.map((categoryId) => ({ categoryId })),
+          },
+        }),
       },
     });
 

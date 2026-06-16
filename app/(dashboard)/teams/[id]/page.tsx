@@ -42,6 +42,7 @@ export default async function TeamDetailPage({
     prisma.volunteer.findMany({
       where: { organizationId: orgId, isActive: true },
       orderBy: [{ lastName: "asc" }, { firstName: "asc" }],
+      include: { categories: { select: { categoryId: true } } },
     }),
   ]);
 
@@ -88,7 +89,7 @@ export default async function TeamDetailPage({
               <Users className="h-4 w-4" />
               Members ({team.memberships.length})
             </CardTitle>
-            <TeamMembersManager teamId={id} availableVolunteers={availableVolunteers} memberIds={memberIds} />
+            <TeamMembersManager teamId={id} availableVolunteers={availableVolunteers} memberIds={memberIds} teamCategoryId={team.categoryId} />
           </CardHeader>
           <CardContent>
             {team.memberships.length === 0 ? (

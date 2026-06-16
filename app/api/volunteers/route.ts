@@ -60,7 +60,13 @@ export async function POST(req: Request) {
         email: data.email || null,
         skills: data.skills || [],
         notes: data.notes || null,
+        availability: data.availability ?? [],
         organizationId: session.user.organizationId,
+        categories: data.categoryIds?.length
+          ? {
+              create: data.categoryIds.map((categoryId) => ({ categoryId })),
+            }
+          : undefined,
       },
     });
 

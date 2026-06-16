@@ -85,12 +85,25 @@ model Volunteer {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  organization    Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  availability    Json?   @default("[]")
+
+  organization    Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   teamMemberships TeamMembership[]
   assignments     Assignment[]
   smsLogs         SmsLog[]
+  categories      VolunteerCategory[]
 
   @@unique([organizationId, phone])
+}
+
+model VolunteerCategory {
+  volunteerId String
+  categoryId  String
+
+  volunteer Volunteer @relation(fields: [volunteerId], references: [id], onDelete: Cascade)
+  category  Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([volunteerId, categoryId])
 }
 
 model TeamMembership {
@@ -113,10 +126,11 @@ model Category {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  organization  Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization  Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   teams         Team[]
   tasks         Task[]
   taskTemplates TaskTemplate[]
+  volunteers    VolunteerCategory[]
 
   @@unique([organizationId, name])
 }

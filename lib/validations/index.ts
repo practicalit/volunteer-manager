@@ -16,6 +16,14 @@ export const registerSchema = z.object({
     .regex(/^[a-z0-9-]+$/, "Only lowercase letters, numbers, and hyphens"),
 });
 
+export const availabilitySlotSchema = z.object({
+  day: z.enum(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]),
+  startTime: z.string().regex(/^\d{2}:\d{2}$/, "Invalid time format"),
+  endTime: z.string().regex(/^\d{2}:\d{2}$/, "Invalid time format"),
+});
+
+export type AvailabilitySlot = z.infer<typeof availabilitySlotSchema>;
+
 export const volunteerSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
@@ -26,6 +34,8 @@ export const volunteerSchema = z.object({
   email: z.string().email("Invalid email address").optional().or(z.literal("")),
   skills: z.array(z.string()).optional(),
   notes: z.string().optional(),
+  categoryIds: z.array(z.string()).optional(),
+  availability: z.array(availabilitySlotSchema).optional(),
 });
 
 export const categorySchema = z.object({

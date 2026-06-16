@@ -45,6 +45,42 @@ export default async function TaskDetailPage({ params }: Props) {
 
   if (!task) notFound();
 
+  // Find volunteers already PENDING/CONFIRMED on a *different* task within ±2 hours.
+  // Two-step: find overlapping task IDs first, then query assignments against them.
+  const CONFLICT_WINDOW_MS = 2 * 60 * 60 * 1000;
+  const windowStart = new Date(task.scheduledAt.getTime() - CONFLICT_WINDOW_MS);
+  const windowEnd   = new Date(task.scheduledAt.getTime() + CONFLICT_WINDOW_MS);
+
+  const overlappingTasks = await prisma.task.findMany({
+    where: {
+      organizationId: orgId,
+      id: { not: id },
+      scheduledAt: { gte: windowStart, lte: windowEnd },
+    },
+    select: { id: true, name: true },
+  });
+
+  const conflictingVolunteers: Record<string, string> = {};
+
+  if (overlappingTasks.length > 0) {
+    const overlappingTaskIds = overlappingTasks.map((t) => t.id);
+    const taskNameById = new Map(overlappingTasks.map((t) => [t.id, t.name]));
+
+    const conflictingAssignments = await prisma.assignment.findMany({
+      where: {
+        taskId: { in: overlappingTaskIds },
+        status: { in: ["PENDING", "CONFIRMED"] },
+      },
+      select: { volunteerId: true, taskId: true },
+    });
+
+    for (const ca of conflictingAssignments) {
+      if (!conflictingVolunteers[ca.volunteerId]) {
+        conflictingVolunteers[ca.volunteerId] = taskNameById.get(ca.taskId) ?? "another task";
+      }
+    }
+  }
+
   const confirmed = task.assignments.filter((a) => a.status === "CONFIRMED").length;
   const pending = task.assignments.filter((a) => a.status === "PENDING").length;
   const declined = task.assignments.filter((a) => a.status === "DECLINED").length;
@@ -137,6 +173,7 @@ export default async function TaskDetailPage({ params }: Props) {
               existingAssignments={task.assignments.map((a) => ({ id: a.id, volunteerId: a.volunteerId }))}
               teamMemberIds={task.team?.memberships.map((m) => m.volunteerId) ?? []}
               smsMode={smsMode}
+              conflictingVolunteers={conflictingVolunteers}
             />
           </div>
         </CardHeader>
