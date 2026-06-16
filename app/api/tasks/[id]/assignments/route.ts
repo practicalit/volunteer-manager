@@ -19,10 +19,11 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   if (!task) return NextResponse.json({ error: "Task not found" }, { status: 404 });
 
   const body = await req.json();
-  const { volunteerIds, forceVolunteerIds = [], sendNotification = true } = body as {
+  const { volunteerIds, forceVolunteerIds = [], sendNotification = true, customMessage: bodyCustomMessage } = body as {
     volunteerIds: string[];
     forceVolunteerIds?: string[];
     sendNotification?: boolean;
+    customMessage?: string;
   };
 
   if (!Array.isArray(volunteerIds) || volunteerIds.length === 0) {
@@ -101,7 +102,8 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
         taskName: task.name,
         taskDate: formatDateTime(task.scheduledAt),
         orgName: task.organization.name,
-        customMessage: task.customMessage,
+        // Per-send override takes precedence; fall back to the task's default.
+        customMessage: bodyCustomMessage || task.customMessage,
       });
 
       smsResult = await sendSms({
