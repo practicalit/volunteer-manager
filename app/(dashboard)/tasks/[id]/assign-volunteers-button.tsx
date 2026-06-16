@@ -245,7 +245,7 @@ export function AssignVolunteersButton({
                           />
                           <AlertTriangle className="h-3.5 w-3.5 text-amber-500 shrink-0" />
                           <span className="text-sm font-medium text-gray-700">{v.firstName} {v.lastName}</span>
-                          <span className="ml-auto text-xs text-amber-700 whitespace-nowrap truncate max-w-35">
+                          <span className="ml-auto text-xs text-amber-700 whitespace-nowrap truncate max-w-[8.75rem]">
                             {conflictingVolunteers[v.id]}
                           </span>
                         </label>
