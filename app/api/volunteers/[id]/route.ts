@@ -44,6 +44,20 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     const body = await req.json();
     const data = volunteerSchema.partial().parse(body);
 
+    // Deduplicate and validate category IDs belong to this org.
+    let validatedCategoryIds: string[] = [];
+    if (data.categoryIds !== undefined) {
+      validatedCategoryIds = [...new Set(data.categoryIds)];
+      if (validatedCategoryIds.length > 0) {
+        const validCount = await prisma.category.count({
+          where: { id: { in: validatedCategoryIds }, organizationId: session.user.organizationId },
+        });
+        if (validCount !== validatedCategoryIds.length) {
+          return NextResponse.json({ error: "One or more invalid category IDs" }, { status: 400 });
+        }
+      }
+    }
+
     const updated = await prisma.volunteer.update({
       where: { id },
       data: {
@@ -53,8 +67,15 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
         ...(data.email !== undefined && { email: data.email || null }),
         ...(data.skills !== undefined && { skills: data.skills }),
         ...(data.notes !== undefined && { notes: data.notes || null }),
+        ...(data.availability !== undefined && { availability: data.availability }),
         ...(body.isActive !== undefined && { isActive: body.isActive }),
         ...(body.optedOut !== undefined && { optedOut: body.optedOut }),
+        ...(data.categoryIds !== undefined && {
+          categories: {
+            deleteMany: {},
+            create: validatedCategoryIds.map((categoryId) => ({ categoryId })),
+          },
+        }),
       },
     });
 

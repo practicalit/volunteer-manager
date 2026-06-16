@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatPhone, formatDate, formatDateTime, getInitials, getStatusColor } from "@/lib/utils";
 import { ArrowLeft, Phone, Mail, ClipboardList } from "lucide-react";
 import { VolunteerActions } from "./volunteer-actions";
+import { VolunteerEditForm } from "./volunteer-edit-form";
 
 export default async function VolunteerDetailPage({
   params,
@@ -21,6 +22,7 @@ export default async function VolunteerDetailPage({
   const volunteer = await prisma.volunteer.findFirst({
     where: { id, organizationId: session.user.organizationId },
     include: {
+      categories: { select: { categoryId: true } },
       teamMemberships: {
         include: {
           team: {
@@ -38,11 +40,17 @@ export default async function VolunteerDetailPage({
 
   if (!volunteer) notFound();
 
-  const allTeams = await prisma.team.findMany({
-    where: { category: { organizationId: session.user.organizationId } },
-    include: { category: true },
-    orderBy: { name: "asc" },
-  });
+  const [allTeams, allCategories] = await Promise.all([
+    prisma.team.findMany({
+      where: { category: { organizationId: session.user.organizationId } },
+      include: { category: true },
+      orderBy: { name: "asc" },
+    }),
+    prisma.category.findMany({
+      where: { organizationId: session.user.organizationId },
+      orderBy: { name: "asc" },
+    }),
+  ]);
 
   const memberTeamIds = volunteer.teamMemberships.map((m) => m.teamId);
 
@@ -90,7 +98,10 @@ export default async function VolunteerDetailPage({
             </div>
           </div>
         </div>
-        <VolunteerActions volunteer={volunteer} />
+        <div className="flex items-center gap-2">
+          <VolunteerEditForm volunteer={volunteer} categories={allCategories} />
+          <VolunteerActions volunteer={volunteer} />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">

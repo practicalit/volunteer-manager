@@ -42,6 +42,6 @@ export function DialogDescription({ children }: { children: React.ReactNode }) {
   return <p className="text-sm text-gray-500">{children}</p>;
 }
 
-export function DialogFooter({ children }: { children: React.ReactNode }) {
-  return <div className="mt-6 flex justify-end gap-2">{children}</div>;
+export function DialogFooter({ children, className }: { children: React.ReactNode; className?: string }) {
+  return <div className={cn("mt-6 flex justify-end gap-2", className)}>{children}</div>;
 }

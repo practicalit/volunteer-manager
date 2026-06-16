@@ -52,6 +52,17 @@ export async function POST(req: Request) {
     const body = await req.json();
     const data = volunteerSchema.parse(body);
 
+    // Deduplicate and validate that every supplied category belongs to this org.
+    const uniqueCategoryIds = [...new Set(data.categoryIds ?? [])];
+    if (uniqueCategoryIds.length > 0) {
+      const validCount = await prisma.category.count({
+        where: { id: { in: uniqueCategoryIds }, organizationId: session.user.organizationId },
+      });
+      if (validCount !== uniqueCategoryIds.length) {
+        return NextResponse.json({ error: "One or more invalid category IDs" }, { status: 400 });
+      }
+    }
+
     const volunteer = await prisma.volunteer.create({
       data: {
         firstName: data.firstName,
@@ -60,7 +71,11 @@ export async function POST(req: Request) {
         email: data.email || null,
         skills: data.skills || [],
         notes: data.notes || null,
+        availability: data.availability ?? [],
         organizationId: session.user.organizationId,
+        categories: uniqueCategoryIds.length
+          ? { create: uniqueCategoryIds.map((categoryId) => ({ categoryId })) }
+          : undefined,
       },
     });
 
