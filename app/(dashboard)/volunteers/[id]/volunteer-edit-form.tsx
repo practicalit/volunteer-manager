@@ -38,14 +38,15 @@ interface VolunteerEditFormProps {
 
 function parseAvailability(raw: unknown): AvailabilitySlot[] {
   if (!Array.isArray(raw)) return [];
-  return raw.filter(
-    (s): s is AvailabilitySlot =>
-      s &&
-      typeof s === "object" &&
-      typeof s.day === "string" &&
-      typeof s.startTime === "string" &&
-      typeof s.endTime === "string"
-  );
+  return raw.filter((s): s is AvailabilitySlot => {
+    if (!s || typeof s !== "object") return false;
+    const obj = s as Record<string, unknown>;
+    return (
+      typeof obj.day === "string" &&
+      typeof obj.startTime === "string" &&
+      typeof obj.endTime === "string"
+    );
+  });
 }
 
 export function VolunteerEditForm({ volunteer, categories }: VolunteerEditFormProps) {
