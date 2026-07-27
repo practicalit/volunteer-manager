@@ -99,11 +99,11 @@ export default async function TeamDetailPage({
                 {team.memberships.map((m) => (
                   <li key={m.id} className="flex items-center justify-between rounded-md border border-gray-100 px-3 py-2">
                     <div className="flex items-center gap-2">
-                      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-indigo-50 text-xs font-medium text-indigo-600">
+                      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-light text-xs font-medium text-primary">
                         {getInitials(`${m.volunteer.firstName} ${m.volunteer.lastName}`)}
                       </div>
                       <div>
-                        <Link href={`/volunteers/${m.volunteer.id}`} className="text-sm font-medium text-gray-900 hover:text-indigo-600">
+                        <Link href={`/volunteers/${m.volunteer.id}`} className="text-sm font-medium text-gray-900 hover:text-primary">
                           {m.volunteer.firstName} {m.volunteer.lastName}
                         </Link>
                         <p className="text-xs text-gray-400">{m.volunteer.phone}</p>
@@ -124,7 +124,7 @@ export default async function TeamDetailPage({
               <ClipboardList className="h-4 w-4" />
               Tasks ({team.tasks.length})
             </CardTitle>
-            <Link href={`/tasks?teamId=${id}`} className="text-sm text-indigo-600 hover:underline">
+            <Link href={`/tasks?teamId=${id}`} className="text-sm text-primary hover:underline">
               View all
             </Link>
           </CardHeader>
@@ -136,7 +136,7 @@ export default async function TeamDetailPage({
                 {team.tasks.map((t) => (
                   <li key={t.id} className="flex items-center justify-between rounded-md border border-gray-100 px-3 py-2">
                     <div>
-                      <Link href={`/tasks/${t.id}`} className="text-sm font-medium text-gray-900 hover:text-indigo-600">
+                      <Link href={`/tasks/${t.id}`} className="text-sm font-medium text-gray-900 hover:text-primary">
                         {t.name}
                       </Link>
                       <p className="text-xs text-gray-400">{formatDateTime(t.scheduledAt)}</p>

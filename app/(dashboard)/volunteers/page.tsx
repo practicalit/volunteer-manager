@@ -72,7 +72,7 @@ export default async function VolunteersPage({
           {volunteers.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <p className="text-gray-500">No volunteers found.</p>
-              <Link href="/volunteers/new" className="mt-2 text-sm text-indigo-600 hover:underline">
+              <Link href="/volunteers/new" className="mt-2 text-sm text-primary hover:underline">
                 Add your first volunteer
               </Link>
             </div>
@@ -94,11 +94,11 @@ export default async function VolunteersPage({
                     <tr key={v.id} className="hover:bg-gray-50">
                       <td className="py-3 pl-6">
                         <div className="flex items-center gap-3">
-                          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-medium text-indigo-700">
+                          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary-lighter text-xs font-medium text-primary-hover">
                             {getInitials(`${v.firstName} ${v.lastName}`)}
                           </div>
                           <div>
-                            <Link href={`/volunteers/${v.id}`} className="font-medium text-gray-900 hover:text-indigo-600">
+                            <Link href={`/volunteers/${v.id}`} className="font-medium text-gray-900 hover:text-primary">
                               {v.lastName}, {v.firstName}
                             </Link>
                             {v.email && <p className="text-xs text-gray-400">{v.email}</p>}
@@ -135,7 +135,7 @@ export default async function VolunteersPage({
                         )}
                       </td>
                       <td className="py-3 pr-6 text-right">
-                        <Link href={`/volunteers/${v.id}`} className="text-sm text-indigo-600 hover:underline">
+                        <Link href={`/volunteers/${v.id}`} className="text-sm text-primary hover:underline">
                           View
                         </Link>
                       </td>

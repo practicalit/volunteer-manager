@@ -176,7 +176,7 @@ export default async function TasksPage({ searchParams }: PageProps) {
                     <Badge className={getStatusColor(task.status)}>{STATUS_LABELS[task.status]}</Badge>
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <Link href={`/tasks/${task.id}`} className="text-indigo-600 hover:text-indigo-800 font-medium text-xs">
+                    <Link href={`/tasks/${task.id}`} className="text-primary hover:text-primary-active font-medium text-xs">
                       View →
                     </Link>
                   </td>

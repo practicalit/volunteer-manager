@@ -68,7 +68,7 @@ export default async function VolunteerDetailPage({
       {/* Header */}
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-4">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-indigo-100 text-lg font-semibold text-indigo-700">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-lighter text-lg font-semibold text-primary-hover">
             {getInitials(`${volunteer.firstName} ${volunteer.lastName}`)}
           </div>
           <div>
@@ -151,7 +151,7 @@ export default async function VolunteerDetailPage({
                         style={{ backgroundColor: m.team.category.color }}
                       />
                       <div>
-                        <Link href={`/teams/${m.teamId}`} className="font-medium text-gray-900 hover:text-indigo-600">
+                        <Link href={`/teams/${m.teamId}`} className="font-medium text-gray-900 hover:text-primary">
                           {m.team.name}
                         </Link>
                         <p className="text-xs text-gray-400">
@@ -195,7 +195,7 @@ export default async function VolunteerDetailPage({
                     {volunteer.assignments.map((a) => (
                       <tr key={a.id}>
                         <td className="py-2">
-                          <Link href={`/tasks/${a.task.id}`} className="font-medium text-gray-900 hover:text-indigo-600">
+                          <Link href={`/tasks/${a.task.id}`} className="font-medium text-gray-900 hover:text-primary">
                             {a.task.name}
                           </Link>
                         </td>

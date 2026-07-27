@@ -57,7 +57,7 @@ export function Select({ value, onValueChange, placeholder, disabled, children, 
         type="button"
         disabled={disabled}
         onClick={() => setOpen(!open)}
-        className="flex h-10 w-full items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        className="flex h-10 w-full items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-primary"
       >
         <span className={cn(!selectedLabel && "text-gray-400")}>
           {selectedLabel || placeholder || "Select..."}
@@ -75,7 +75,7 @@ export function Select({ value, onValueChange, placeholder, disabled, children, 
                 setOpen(false);
               }}
             >
-              {item.value === value && <Check className="mr-2 h-4 w-4 text-indigo-600" />}
+              {item.value === value && <Check className="mr-2 h-4 w-4 text-primary" />}
               <span className={item.value !== value ? "ml-6" : ""}>{item.label}</span>
             </div>
           ))}

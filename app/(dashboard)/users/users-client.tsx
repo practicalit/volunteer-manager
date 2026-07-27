@@ -143,7 +143,7 @@ export function UsersClient({ users: initial, currentUserId }: Props) {
                         onClick={() => toggleActive(u)}
                         disabled={loading === u.id}
                         title={u.isActive ? "Deactivate" : "Activate"}
-                        className="rounded p-1 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"
+                        className="rounded p-1 text-gray-400 hover:text-primary hover:bg-primary-light transition-colors"
                       >
                         {u.isActive ? <UserX className="h-4 w-4" /> : <UserCheck className="h-4 w-4" />}
                       </button>

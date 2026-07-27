@@ -119,7 +119,7 @@ export function CategoriesClient({ initialCategories }: CategoriesClientProps) {
           <Card>
             <CardContent className="flex flex-col items-center justify-center py-16">
               <p className="text-gray-500">No categories yet.</p>
-              <button onClick={openCreate} className="mt-2 text-sm text-indigo-600 hover:underline">
+              <button onClick={openCreate} className="mt-2 text-sm text-primary hover:underline">
                 Create your first category
               </button>
             </CardContent>

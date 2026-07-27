@@ -3,6 +3,18 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  --primary: #5a0f13;
+  --primary-hover: #4c0d10;
+  --primary-active: #440b0e;
+  --primary-light: #f2ecec;
+  --primary-lighter: #e6dbdc;
+
+  --secondary: #c7921e;
+  --secondary-hover: #a97c1a;
+  --secondary-active: #956e16;
+  --secondary-light: #f8f2e4;
+  --secondary-lighter: #f4e9d2;
 }
 
 @theme inline {
@@ -10,6 +22,18 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-active: var(--primary-active);
+  --color-primary-light: var(--primary-light);
+  --color-primary-lighter: var(--primary-lighter);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-secondary-active: var(--secondary-active);
+  --color-secondary-light: var(--secondary-light);
+  --color-secondary-lighter: var(--secondary-lighter);
 }
 
 @media (prefers-color-scheme: dark) {

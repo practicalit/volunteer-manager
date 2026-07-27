@@ -105,13 +105,13 @@ export default async function AssignmentsPage({ searchParams }: PageProps) {
                 {assignments.map((a) => (
                   <tr key={a.id} className="hover:bg-gray-50">
                     <td className="px-4 py-3">
-                      <Link href={`/volunteers/${a.volunteerId}`} className="font-medium text-gray-900 hover:text-indigo-600">
+                      <Link href={`/volunteers/${a.volunteerId}`} className="font-medium text-gray-900 hover:text-primary">
                         {a.volunteer.firstName} {a.volunteer.lastName}
                       </Link>
                       <div className="text-xs text-gray-400">{a.volunteer.phone}</div>
                     </td>
                     <td className="px-4 py-3">
-                      <Link href={`/tasks/${a.taskId}`} className="text-indigo-600 hover:underline">
+                      <Link href={`/tasks/${a.taskId}`} className="text-primary hover:underline">
                         {a.task.name}
                       </Link>
                     </td>

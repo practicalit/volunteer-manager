@@ -6,8 +6,8 @@ import { Toaster } from "sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "VolunteerHub — Volunteer Management",
-  description: "Manage volunteers, teams, and assignments with SMS notifications",
+  title: "HBKY VolunteerHub — Volunteer Management",
+  description: "HBKY VolunteerHub — Manage volunteers, teams, and assignments with SMS notifications",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
