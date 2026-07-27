@@ -51,7 +51,7 @@ export function getStatusColor(status: string) {
     CONFIRMED: "bg-green-100 text-green-800",
     DECLINED: "bg-red-100 text-red-800",
     NO_RESPONSE: "bg-gray-100 text-gray-800",
-    UPCOMING: "bg-blue-100 text-blue-800",
+    UPCOMING: "bg-secondary-lighter text-secondary-active",
     IN_PROGRESS: "bg-purple-100 text-purple-800",
     COMPLETED: "bg-green-100 text-green-800",
     CANCELLED: "bg-red-100 text-red-800",
