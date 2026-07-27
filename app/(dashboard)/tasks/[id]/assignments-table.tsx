@@ -123,7 +123,7 @@ export function AssignmentsTable({ taskId, assignments, smsMode }: Props) {
                     title="Resend SMS"
                     onClick={() => resend(a.id)}
                     disabled={loading === a.id}
-                    className="rounded p-1 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"
+                    className="rounded p-1 text-gray-400 hover:text-primary hover:bg-primary-light transition-colors"
                   >
                     <RefreshCw className="h-3.5 w-3.5" />
                   </button>

@@ -106,7 +106,7 @@ export default async function TaskDetailPage({ params }: Props) {
           <CardContent className="pt-4">
             <div className="text-xs text-gray-500">Scheduled</div>
             <div className="mt-1 font-semibold text-gray-900 flex items-center gap-1">
-              <Calendar className="h-3.5 w-3.5 text-indigo-500" />
+              <Calendar className="h-3.5 w-3.5 text-primary" />
               {formatDate(task.scheduledAt)}
             </div>
           </CardContent>
@@ -116,7 +116,7 @@ export default async function TaskDetailPage({ params }: Props) {
             <div className="text-xs text-gray-500">Team</div>
             <div className="mt-1 font-semibold text-gray-900">
               {task.team ? (
-                <Link href={`/teams/${task.team.id}`} className="text-indigo-600 hover:underline">
+                <Link href={`/teams/${task.team.id}`} className="text-primary hover:underline">
                   {task.team.name}
                 </Link>
               ) : "—"}

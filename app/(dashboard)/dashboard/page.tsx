@@ -55,8 +55,8 @@ export default async function DashboardPage() {
   const smsMode = getSmsMode();
 
   const stats = [
-    { label: "Total Volunteers", value: totalVolunteers, sub: `${activeVolunteers} active`, icon: Users, color: "text-indigo-600 bg-indigo-50" },
-    { label: "Upcoming Tasks", value: upcomingTasks, sub: `${totalTasks} total`, icon: ClipboardList, color: "text-blue-600 bg-blue-50" },
+    { label: "Total Volunteers", value: totalVolunteers, sub: `${activeVolunteers} active`, icon: Users, color: "text-primary bg-primary-light" },
+    { label: "Upcoming Tasks", value: upcomingTasks, sub: `${totalTasks} total`, icon: ClipboardList, color: "text-secondary bg-secondary-light" },
     { label: "Pending Confirmations", value: pendingAssignments, sub: "awaiting reply", icon: AlertCircle, color: "text-yellow-600 bg-yellow-50" },
     { label: "Confirmed Assignments", value: confirmedAssignments, sub: "all time", icon: CheckSquare, color: "text-green-600 bg-green-50" },
   ];
@@ -105,7 +105,7 @@ export default async function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-base">Upcoming Tasks</CardTitle>
-            <Link href="/tasks" className="text-sm text-indigo-600 hover:underline">
+            <Link href="/tasks" className="text-sm text-primary hover:underline">
               View all
             </Link>
           </CardHeader>
@@ -122,7 +122,7 @@ export default async function DashboardPage() {
                         style={{ backgroundColor: task.category.color }}
                       />
                       <div>
-                        <Link href={`/tasks/${task.id}`} className="text-sm font-medium text-gray-900 hover:text-indigo-600">
+                        <Link href={`/tasks/${task.id}`} className="text-sm font-medium text-gray-900 hover:text-primary">
                           {task.name}
                         </Link>
                         <p className="text-xs text-gray-500">{formatDateTime(task.scheduledAt)}</p>
@@ -140,7 +140,7 @@ export default async function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-base">Recent SMS Activity</CardTitle>
-            <Link href="/sms-log" className="text-sm text-indigo-600 hover:underline">
+            <Link href="/sms-log" className="text-sm text-primary hover:underline">
               View all
             </Link>
           </CardHeader>
@@ -151,7 +151,7 @@ export default async function DashboardPage() {
               <ul className="space-y-3">
                 {recentSmsLogs.map((log) => (
                   <li key={log.id} className="flex items-start gap-3">
-                    <div className={`mt-0.5 h-2 w-2 rounded-full flex-shrink-0 ${log.direction === "OUTBOUND" ? "bg-blue-400" : "bg-green-400"}`} />
+                    <div className={`mt-0.5 h-2 w-2 rounded-full flex-shrink-0 ${log.direction === "OUTBOUND" ? "bg-secondary" : "bg-green-400"}`} />
                     <div className="min-w-0">
                       <p className="truncate text-sm text-gray-700">{log.body}</p>
                       <p className="text-xs text-gray-400">
@@ -180,10 +180,10 @@ export default async function DashboardPage() {
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
-            <Link href="/volunteers/new" className="rounded-md bg-indigo-50 px-3 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-100">
+            <Link href="/volunteers/new" className="rounded-md bg-primary-light px-3 py-2 text-sm font-medium text-primary-hover hover:bg-primary-lighter">
               + Add Volunteer
             </Link>
-            <Link href="/tasks/new" className="rounded-md bg-blue-50 px-3 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100">
+            <Link href="/tasks/new" className="rounded-md bg-secondary-light px-3 py-2 text-sm font-medium text-secondary-hover hover:bg-secondary-lighter">
               + Create Task
             </Link>
             <Link href="/teams" className="rounded-md bg-purple-50 px-3 py-2 text-sm font-medium text-purple-700 hover:bg-purple-100">

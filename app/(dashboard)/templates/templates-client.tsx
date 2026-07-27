@@ -128,7 +128,7 @@ export function TemplatesClient({ templates: initial, categories }: Props) {
                 <div className="flex items-start justify-between">
                   <h3 className="font-semibold text-gray-900">{t.name}</h3>
                   <div className="flex gap-1 shrink-0">
-                    <button onClick={() => openEdit(t)} className="rounded p-1 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50">
+                    <button onClick={() => openEdit(t)} className="rounded p-1 text-gray-400 hover:text-primary hover:bg-primary-light">
                       <Pencil className="h-3.5 w-3.5" />
                     </button>
                     <button onClick={() => remove(t.id)} className="rounded p-1 text-gray-400 hover:text-red-600 hover:bg-red-50">
@@ -177,7 +177,7 @@ export function TemplatesClient({ templates: initial, categories }: Props) {
             <div>
               <Label>Category</Label>
               <select
-                className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                 value={form.categoryId}
                 onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
               >

@@ -45,7 +45,7 @@ export default async function TeamsPage() {
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-16">
             <p className="text-gray-500">No teams yet. Create a category first, then add teams.</p>
-            <Link href="/categories" className="mt-2 text-sm text-indigo-600 hover:underline">
+            <Link href="/categories" className="mt-2 text-sm text-primary hover:underline">
               Go to Categories
             </Link>
           </CardContent>

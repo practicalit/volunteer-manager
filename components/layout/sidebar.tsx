@@ -48,15 +48,15 @@ export function Sidebar({ userRole, orgName, userName }: SidebarProps) {
   ];
 
   return (
-    <aside className="flex h-screen w-64 flex-col border-r border-gray-200 bg-white">
+    <aside className="flex h-screen w-64 flex-col border-r border-primary-active bg-primary">
       {/* Logo / Org name */}
-      <div className="flex h-16 items-center gap-2 border-b border-gray-200 px-6">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600">
-          <UsersRound className="h-5 w-5 text-white" />
+      <div className="flex h-16 items-center gap-2 border-b border-white/10 px-6">
+        <div className="flex h-17 w-17 items-center justify-center">
+          <img src="/hbky-logo.png" alt="VolunteerHub Logo" />
         </div>
         <div className="overflow-hidden">
-          <p className="truncate text-sm font-semibold text-gray-900">{orgName}</p>
-          <p className="text-xs text-gray-500">Volunteer Portal</p>
+          <p className="truncate text-sm font-semibold text-white">{orgName}</p>
+          <p className="text-xs text-white/60">HBKY Volunteer</p>
         </div>
       </div>
 
@@ -73,8 +73,8 @@ export function Sidebar({ userRole, orgName, userName }: SidebarProps) {
                   className={cn(
                     "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                     active
-                      ? "bg-indigo-50 text-indigo-700"
-                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                      ? "bg-secondary text-primary-active"
+                      : "text-white/70 hover:bg-white/10 hover:text-white"
                   )}
                 >
                   <Icon className="h-4 w-4 flex-shrink-0" />
@@ -87,11 +87,11 @@ export function Sidebar({ userRole, orgName, userName }: SidebarProps) {
       </nav>
 
       {/* User section */}
-      <div className="border-t border-gray-200 p-4">
-        <div className="mb-2 text-xs font-medium text-gray-500 uppercase">{userName}</div>
+      <div className="border-t border-white/10 p-4">
+        <div className="mb-2 text-xs font-medium text-white/50 uppercase">{userName}</div>
         <button
           onClick={() => signOut({ callbackUrl: "/login" })}
-          className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+          className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-white/70 hover:bg-white/10 hover:text-white"
         >
           <LogOut className="h-4 w-4" />
           Sign out

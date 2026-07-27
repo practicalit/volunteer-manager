@@ -152,7 +152,7 @@ export function AssignVolunteersButton({
 
               <div className="space-y-3 py-2">
                 <input
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="Search volunteers..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
@@ -179,7 +179,7 @@ export function AssignVolunteersButton({
                             type="checkbox"
                             checked={selected.includes(v.id)}
                             onChange={() => toggle(v.id)}
-                            className="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                            className="h-4 w-4 rounded border-gray-300 text-primary"
                           />
                           <span className="text-sm font-medium text-gray-900">{v.firstName} {v.lastName}</span>
                           <span className="text-xs text-gray-400 ml-auto">{v.phone}</span>
@@ -224,7 +224,7 @@ export function AssignVolunteersButton({
                             type="checkbox"
                             checked={selected.includes(v.id)}
                             onChange={() => toggle(v.id)}
-                            className="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                            className="h-4 w-4 rounded border-gray-300 text-primary"
                           />
                           <span className="text-sm font-medium text-gray-900">{v.firstName} {v.lastName}</span>
                           <span className="text-xs text-gray-400 ml-auto">{v.phone}</span>
@@ -302,7 +302,7 @@ export function AssignVolunteersButton({
                         return (
                           <li key={id} className="flex items-center justify-between rounded-md bg-green-50 px-3 py-1.5 text-sm">
                             <span className="font-medium text-gray-900">{v.firstName} {v.lastName}</span>
-                            <span className={`text-xs rounded px-1.5 py-0.5 ${isTeam ? "bg-indigo-100 text-indigo-700" : "bg-gray-100 text-gray-500"}`}>
+                            <span className={`text-xs rounded px-1.5 py-0.5 ${isTeam ? "bg-primary-lighter text-primary-hover" : "bg-gray-100 text-gray-500"}`}>
                               {isTeam ? "team member" : "additional"}
                             </span>
                           </li>
@@ -328,7 +328,7 @@ export function AssignVolunteersButton({
                           <li
                             key={id}
                             className={`rounded-md border px-3 py-2 text-sm transition-colors ${
-                              isForced ? "border-indigo-200 bg-indigo-50" : "border-amber-200 bg-amber-50"
+                              isForced ? "border-primary-lighter bg-primary-light" : "border-amber-200 bg-amber-50"
                             }`}
                           >
                             <div className="flex items-center justify-between gap-2">
@@ -348,7 +348,7 @@ export function AssignVolunteersButton({
                                 onClick={() => toggleForce(id)}
                                 className={`shrink-0 rounded-md border px-2.5 py-1 text-xs font-medium transition-colors ${
                                   isForced
-                                    ? "border-indigo-300 bg-indigo-100 text-indigo-700 hover:bg-indigo-200"
+                                    ? "border-primary-lighter bg-primary-lighter text-primary-hover hover:bg-primary-lighter"
                                     : "border-gray-300 bg-white text-gray-600 hover:bg-gray-50"
                                 }`}
                               >
@@ -374,7 +374,7 @@ export function AssignVolunteersButton({
                       Custom SMS message <span className="text-gray-400 font-normal">(optional)</span>
                     </label>
                     <textarea
-                      className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary"
                       rows={2}
                       placeholder="Leave blank to use default message"
                       value={customMessage}

@@ -45,10 +45,10 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-sm">
         <div className="mb-8 flex flex-col items-center gap-2">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-600">
-            <UsersRound className="h-7 w-7 text-white" />
+          <div className="flex h-45 w-45 items-center justify-center">
+            <img src="/hbky-logo.png" alt="HBKY Volunteers Logo" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">VolunteerHub</h1>
+          <h1 className="text-2xl font-bold text-gray-900">HBKY Volunteers</h1>
         </div>
 
         <Card>
@@ -74,7 +74,7 @@ export default function LoginPage() {
             </form>
             <p className="mt-4 text-center text-sm text-gray-500">
               New organization?{" "}
-              <Link href="/register" className="font-medium text-indigo-600 hover:underline">
+              <Link href="/register" className="font-medium text-primary hover:underline">
                 Register here
               </Link>
             </p>

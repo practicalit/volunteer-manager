@@ -238,7 +238,7 @@ export function VolunteerEditForm({ volunteer, categories }: VolunteerEditFormPr
                   {skills.map((s) => (
                     <span
                       key={s}
-                      className="flex items-center gap-1 rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs text-indigo-700"
+                      className="flex items-center gap-1 rounded-full bg-primary-light px-2.5 py-0.5 text-xs text-primary-hover"
                     >
                       {s}
                       <button
@@ -272,7 +272,7 @@ export function VolunteerEditForm({ volunteer, categories }: VolunteerEditFormPr
                       <select
                         value={slot.day}
                         onChange={(e) => updateSlot(i, "day", e.target.value)}
-                        className="flex-1 rounded-md border border-gray-200 bg-white px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="flex-1 rounded-md border border-gray-200 bg-white px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                       >
                         {DAYS.map((d) => (
                           <option key={d} value={d}>{d}</option>
@@ -282,14 +282,14 @@ export function VolunteerEditForm({ volunteer, categories }: VolunteerEditFormPr
                         type="time"
                         value={slot.startTime}
                         onChange={(e) => updateSlot(i, "startTime", e.target.value)}
-                        className="rounded-md border border-gray-200 bg-white px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="rounded-md border border-gray-200 bg-white px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                       />
                       <span className="text-xs text-gray-400">to</span>
                       <input
                         type="time"
                         value={slot.endTime}
                         onChange={(e) => updateSlot(i, "endTime", e.target.value)}
-                        className="rounded-md border border-gray-200 bg-white px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="rounded-md border border-gray-200 bg-white px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                       />
                       <button
                         type="button"

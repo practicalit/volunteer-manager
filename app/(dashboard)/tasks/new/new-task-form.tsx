@@ -131,7 +131,7 @@ export function NewTaskForm({ categories, teams, templates, defaultTeamId }: Pro
                 <Label>Template</Label>
                 <select
                   {...register("templateId")}
-                  className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option value="">— Select a template —</option>
                   {templates.map((t) => (
@@ -173,7 +173,7 @@ export function NewTaskForm({ categories, teams, templates, defaultTeamId }: Pro
               <select
                 id="categoryId"
                 {...register("categoryId")}
-                className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="">— None —</option>
                 {categories.map((c) => (
@@ -186,7 +186,7 @@ export function NewTaskForm({ categories, teams, templates, defaultTeamId }: Pro
               <select
                 id="teamId"
                 {...register("teamId")}
-                className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="">— None —</option>
                 {teams.map((t) => (
@@ -215,7 +215,7 @@ export function NewTaskForm({ categories, teams, templates, defaultTeamId }: Pro
               <input
                 type="checkbox"
                 {...register("isRecurring")}
-                className="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                className="h-4 w-4 rounded border-gray-300 text-primary"
               />
               <span className="text-sm text-gray-700">Enable recurrence</span>
             </label>
@@ -229,7 +229,7 @@ export function NewTaskForm({ categories, teams, templates, defaultTeamId }: Pro
                 <select
                   value={freq}
                   onChange={(e) => setFreq(e.target.value)}
-                  className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   {FREQ_OPTIONS.map((o) => (
                     <option key={o.value} value={o.value}>{o.label}</option>
@@ -264,8 +264,8 @@ export function NewTaskForm({ categories, teams, templates, defaultTeamId }: Pro
                       }
                       className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
                         byDay.includes(day)
-                          ? "bg-indigo-600 text-white border-indigo-600"
-                          : "bg-white text-gray-700 border-gray-300 hover:border-indigo-300"
+                          ? "bg-primary text-white border-primary"
+                          : "bg-white text-gray-700 border-gray-300 hover:border-primary-lighter"
                       }`}
                     >
                       {WEEKDAY_LABELS[i]}
